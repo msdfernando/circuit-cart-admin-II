@@ -1,51 +1,80 @@
 "use client"
-import FullLogo from "@/app/(DashboardLayout)/layout/shared/logo/FullLogo";
-import React from "react";
-import Link from "next/link";
-import AuthLogin from "../authforms/AuthLogin";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
-const gradientStyle = {
-  background: "linear-gradient(45deg, rgb(238, 119, 82,0.2), rgb(231, 60, 126,0.2), rgb(35, 166, 213,0.2), rgb(35, 213, 171,0.2))",
-  backgroundSize: "400% 400%",
-  animation: "gradient 15s ease infinite",
-  height: "100vh",
-};
+export default function LoginPage() {
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
 
-const BoxedLogin = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.username === 'admin' && formData.password === '1234') {
+      // Set authentication cookie
+      Cookies.set('isAuthenticated', 'true', { expires: 1 }); // Expires in 1 day
+      router.push('/dashboard');
+    } else {
+      setError('Invalid username or password');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   return (
-    <div style={gradientStyle} className="relative overflow-hidden h-screen">
-      <div className="flex h-full justify-center items-center px-4">
-        <div className="rounded-xl shadow-md bg-white dark:bg-darkgray p-6 w-full md:w-96 border-none">
-          <div className="flex flex-col gap-2 p-0 w-full">
-            <div className="mx-auto">
-              <FullLogo />
-            </div>
-            <p className="text-sm text-center text-dark my-3">Sign In on MatDash</p>
-            <AuthLogin />
-            <div className="flex gap-2 text-base text-ld font-medium mt-6 items-center justify-center">
-              <p>New to Matdash?</p>
-              <Link href="/auth/register" className="text-primary text-sm font-medium">
-                Create an account
-              </Link>
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <div>
+            <h2 className="text-2xl font-bold text-center mb-6">Admin Login</h2>
+            {error && (
+              <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                {error}
+              </div>
+            )}
           </div>
-        </div>
+          <div>
+            <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Enter username"
+              required
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          >
+            Login
+          </button>
+        </form>
       </div>
-      <style jsx global>{`
-        @keyframes gradient {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
     </div>
   );
-};
-
-export default BoxedLogin;
+}
