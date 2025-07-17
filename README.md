@@ -4,7 +4,7 @@ Circuit Cart admin Panel V2 (increase the style and efficency)
 ![CC Git HUB V2](https://github.com/user-attachments/assets/f380e618-0090-4c2a-aca1-3ba377df7881)
 
 
-Circuit Cart admin Panel V2 (increase the style and efficency)
+
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
